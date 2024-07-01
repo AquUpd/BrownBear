@@ -1,4 +1,4 @@
-<h1 align=center>Grizzly Bear mod/h1>
+<h1 align=center>Grizzly Bear mod</h1>
 <h2 align=center>Fabric required!</h2>
 <ul>
     <li> This mod adds Grizzly Bears to your world!</li>
