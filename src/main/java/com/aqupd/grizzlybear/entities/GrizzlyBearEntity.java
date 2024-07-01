@@ -212,14 +212,6 @@ public class GrizzlyBearEntity extends Animal implements NeutralMob {
         }
     }
 
-    public boolean doHurtTarget(Entity target) {
-        boolean bl = target.hurt(this.damageSources().mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
-        if (bl) {
-            this.doEnchantDamageEffects(this, target);
-        }
-        return bl;
-    }
-
     public boolean isStanding() {
         return this.entityData.get(WARNING);
     }

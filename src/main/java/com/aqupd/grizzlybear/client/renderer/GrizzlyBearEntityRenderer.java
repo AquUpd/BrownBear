@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class GrizzlyBearEntityRenderer extends MobRenderer<GrizzlyBearEntity, GrizzlyBearEntityModel<GrizzlyBearEntity>> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("aqupd", "textures/entity/grizzly_bear.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("aqupd", "textures/entity/grizzly_bear.png");
 
     public GrizzlyBearEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new GrizzlyBearEntityModel<>(context.bakeLayer(MainClient.GRIZZLY_BEAR_LAYER)), 0.9F);

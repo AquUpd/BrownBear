@@ -31,7 +31,7 @@ public class Main implements ModInitializer {
 
 	public static final EntityType<GrizzlyBearEntity> GRIZZLYBEAR = Registry.register(
 			BuiltInRegistries.ENTITY_TYPE,
-			new ResourceLocation("aqupd", "grizzly_bear"),
+			ResourceLocation.fromNamespaceAndPath("aqupd", "grizzly_bear"),
 			EntityType.Builder.of(GrizzlyBearEntity::new, MobCategory.CREATURE).sized(1.4f, 1.4f).build()
 	);
 
@@ -44,13 +44,13 @@ public class Main implements ModInitializer {
 
 	public static final SpawnEggItem GRIZZLY_BEAR_SPAWN_EGG = new SpawnEggItem(GRIZZLYBEAR, 8545340, 4139806, new Item.Properties().stacksTo(64));
 
-	public static final TagKey<Biome> GRIZZLY_BEAR_SPAWN_BIOMES = TagKey.create(Registries.BIOME, new ResourceLocation("aqupd", "grizzly_bear_spawning_biomes"));
+	public static final TagKey<Biome> GRIZZLY_BEAR_SPAWN_BIOMES = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("aqupd", "grizzly_bear_spawning_biomes"));
 
 	@Override
 	public void onInitialize() {
 		ServerWorldEvents.LOAD.register((server, world) -> AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug")));
 
-		Registry.register(BuiltInRegistries.ITEM, new ResourceLocation("aqupd", "grizzly_bear_spawn_egg"), GRIZZLY_BEAR_SPAWN_EGG);
+		Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath("aqupd", "grizzly_bear_spawn_egg"), GRIZZLY_BEAR_SPAWN_EGG);
 		FabricDefaultAttributeRegistry.register(GRIZZLYBEAR, GrizzlyBearEntity.createGrizzlyBearAttributes());
 
 		BiomeModifications.addSpawn(
@@ -64,7 +64,7 @@ public class Main implements ModInitializer {
 	}
 
 	private static SoundEvent register(String id) {
-		SoundEvent soundEvent = SoundEvent.createVariableRangeEvent(new ResourceLocation("aqupd", id));
+		SoundEvent soundEvent = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("aqupd", id));
 		return Registry.register(BuiltInRegistries.SOUND_EVENT, id, soundEvent);
 	}
 }
