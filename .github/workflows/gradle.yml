@@ -6,7 +6,7 @@ jobs:
     strategy:
       matrix:
         java: [21]
-        os: [debian-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
