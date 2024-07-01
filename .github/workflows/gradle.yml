@@ -5,8 +5,8 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [17]
-        os: [ubuntu-20.04]
+        java: [21]
+        os: [debian-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
