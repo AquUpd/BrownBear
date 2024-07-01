@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-
 @Environment(EnvType.CLIENT)
 public class GrizzlyBearEntityRenderer extends MobRenderer<GrizzlyBearEntity, GrizzlyBearEntityModel<GrizzlyBearEntity>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation("aqupd", "textures/entity/grizzly_bear.png");

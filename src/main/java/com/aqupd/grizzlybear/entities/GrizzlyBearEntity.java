@@ -5,11 +5,8 @@
 
 package com.aqupd.grizzlybear.entities;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.aqupd.grizzlybear.Main;
-import com.aqupd.grizzlybear.ai.*;
+import com.aqupd.grizzlybear.ai.GrizzlyBearFishGoal;
 import com.aqupd.grizzlybear.utils.AqConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,35 +24,14 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.NeutralMob;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowParentGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.PanicGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.animal.Fox;
-import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -63,7 +39,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.UUID;
 
 public class GrizzlyBearEntity extends Animal implements NeutralMob {
     private static final EntityDataAccessor<Boolean> WARNING;
@@ -75,27 +55,27 @@ public class GrizzlyBearEntity extends Animal implements NeutralMob {
     private int angerTime;
     private UUID targetUuid;
 
-    private static double health = AqConfig.INSTANCE.getDoubleProperty("entity.health");
-    private static double speed = AqConfig.INSTANCE.getDoubleProperty("entity.speed");
-    private static double follow = AqConfig.INSTANCE.getDoubleProperty("entity.follow");
-    private static double damage = AqConfig.INSTANCE.getDoubleProperty("entity.damage");
-    private static int angermin = AqConfig.INSTANCE.getNumberProperty("entity.angertimemin");
-    private static int angermax = AqConfig.INSTANCE.getNumberProperty("entity.angertimemax");
-    private static boolean friendly = AqConfig.INSTANCE.getBooleanProperty("entity.friendlytoplayer");
+    private static final double health = AqConfig.INSTANCE.getDoubleProperty("entity.health");
+    private static final double speed = AqConfig.INSTANCE.getDoubleProperty("entity.speed");
+    private static final double follow = AqConfig.INSTANCE.getDoubleProperty("entity.follow");
+    private static final double damage = AqConfig.INSTANCE.getDoubleProperty("entity.damage");
+    private static final int angermin = AqConfig.INSTANCE.getNumberProperty("entity.angertimemin");
+    private static final int angermax = AqConfig.INSTANCE.getNumberProperty("entity.angertimemax");
+    private static final boolean friendly = AqConfig.INSTANCE.getBooleanProperty("entity.friendlytoplayer");
 
-    public GrizzlyBearEntity(EntityType<? extends GrizzlyBearEntity> entityType, Level world) {
-        super(entityType, world);
+    public GrizzlyBearEntity(EntityType<? extends GrizzlyBearEntity> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
-        return Main.GRIZZLYBEAR.create(world);
+    public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob entity) {
+        return Main.GRIZZLYBEAR.create(level);
     }
 
     public boolean isFood(ItemStack stack) {
         return LOVINGFOOD.test(stack);
     }
 
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
         boolean bl = this.isFood(player.getItemInHand(hand));
         if (!bl && !player.isSecondaryUseActive()) {
             return InteractionResult.sidedSuccess(this.level().isClientSide);
@@ -190,10 +170,11 @@ public class GrizzlyBearEntity extends Animal implements NeutralMob {
         }
 
     }
-
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(WARNING, false);
+    
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(WARNING, false);
+        super.defineSynchedData(builder);
     }
 
     public void tick() {
@@ -220,14 +201,14 @@ public class GrizzlyBearEntity extends Animal implements NeutralMob {
         }
 
     }
-
-    public EntityDimensions getDimensions(Pose pose) {
+    
+    public @NotNull EntityDimensions getDefaultDimensions(Pose pose) {
         if (this.warningAnimationProgress > 0.0F) {
             float f = this.warningAnimationProgress / 6.0F;
             float g = 1.0F + f;
-            return super.getDimensions(pose).scale(1.0F, g);
+            return super.getDefaultDimensions(pose).scale(1.0F, g);
         } else {
-            return super.getDimensions(pose);
+            return super.getDefaultDimensions(pose);
         }
     }
 
@@ -255,13 +236,13 @@ public class GrizzlyBearEntity extends Animal implements NeutralMob {
     protected float getWaterSlowDown() {
         return 0.98F;
     }
-
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
-        if (entityData == null) {
-            entityData = new AgeableMobGroupData(1.0F);
+    
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        if (spawnGroupData == null) {
+            spawnGroupData = new AgeableMob.AgeableMobGroupData(1.0F);
         }
-
-        return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
+        
+        return super.finalizeSpawn(level, difficulty, spawnType, (SpawnGroupData)spawnGroupData);
     }
 
     static {
@@ -284,9 +265,12 @@ public class GrizzlyBearEntity extends Animal implements NeutralMob {
         public AttackGoal() {
             super(GrizzlyBearEntity.this, 1.25D, true);
         }
-
-        protected void checkAndPerformAttack(LivingEntity target, double squaredDistance) {
+        
+        @Override
+        protected void checkAndPerformAttack(LivingEntity target) {
             double d = this.getAttackReachSqr(target);
+            var squaredDistance = target.distanceToSqr(this.mob);
+            
             if (squaredDistance <= d && this.isTimeToAttack()) {
                 this.resetAttackCooldown();
                 this.mob.doHurtTarget(target);
@@ -296,7 +280,7 @@ public class GrizzlyBearEntity extends Animal implements NeutralMob {
                     GrizzlyBearEntity.this.setStanding(false);
                     this.resetAttackCooldown();
                 }
-
+                
                 if (this.getTicksUntilNextAttack() <= 10) {
                     GrizzlyBearEntity.this.setStanding(true);
                     GrizzlyBearEntity.this.playWarningSound();
@@ -305,7 +289,6 @@ public class GrizzlyBearEntity extends Animal implements NeutralMob {
                 this.resetAttackCooldown();
                 GrizzlyBearEntity.this.setStanding(false);
             }
-
         }
 
         public void stop() {

@@ -2,8 +2,6 @@ package com.aqupd.grizzlybear.ai;
 
 
 import com.aqupd.grizzlybear.entities.GrizzlyBearEntity;
-import java.util.List;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -16,11 +14,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+
+import java.util.List;
 
 
 public class GrizzlyBearFishGoal extends MoveToBlockGoal {
@@ -55,16 +54,10 @@ public class GrizzlyBearFishGoal extends MoveToBlockGoal {
         stayTick = mob.getRandom().nextInt(40)+100;
         super.start();
     }
-
-
-
-    public double getDesiredSquaredDistanceToTarget() {
-        return 2D;
-    }
-
+    
     @Override
     public boolean canContinueToUse() {
-        if (fished){
+        if (fished) {
             fished = false;
             return false;
         }
@@ -76,7 +69,7 @@ public class GrizzlyBearFishGoal extends MoveToBlockGoal {
         if (this.isReachedTarget() && upTick <= 0){
             ((GrizzlyBearEntity)this.mob).setStanding(false);
 
-            LootTable lootTable = this.mob.level().getServer().getLootData().getLootTable(BuiltInLootTables.FISHING);
+            LootTable lootTable = this.mob.level().getServer().reloadableRegistries().getLootTable(BuiltInLootTables.FISHING);
             LootParams lootParams = new LootParams.Builder((ServerLevel)this.mob.level()).withParameter(LootContextParams.ORIGIN, this.mob.position()).withParameter(LootContextParams.THIS_ENTITY, this.mob).create(LootContextParamSets.COMMAND);
             List<ItemStack> list = lootTable.getRandomItems(lootParams);
 

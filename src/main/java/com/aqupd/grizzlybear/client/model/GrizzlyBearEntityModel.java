@@ -15,7 +15,6 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.world.entity.animal.PolarBear;
 
 @Environment(EnvType.CLIENT)
 public class GrizzlyBearEntityModel<T extends GrizzlyBearEntity> extends QuadrupedModel<T> {
