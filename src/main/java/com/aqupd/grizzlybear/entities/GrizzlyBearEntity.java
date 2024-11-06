@@ -36,6 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -212,13 +213,13 @@ public class GrizzlyBearEntity extends Animal implements NeutralMob {
         }
     }
 
-    public boolean doHurtTarget(Entity target) {
-        boolean bl = target.hurt(this.damageSources().mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
-        if (bl) {
-            this.doEnchantDamageEffects(this, target);
-        }
-        return bl;
-    }
+//    public boolean doHurtTarget(Entity target) {
+//        boolean bl = target.hurt(this.damageSources().mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+//        if (bl) {
+//            this.doEnchantDamageEffects(this, target);
+//        }
+//        return bl;
+//    }
 
     public boolean isStanding() {
         return this.entityData.get(WARNING);

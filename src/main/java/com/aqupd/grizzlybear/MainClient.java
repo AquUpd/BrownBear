@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 @Environment(EnvType.CLIENT)
 public class MainClient implements ClientModInitializer {
 
-    public static final ModelLayerLocation GRIZZLY_BEAR_LAYER = new ModelLayerLocation(new ResourceLocation("aqupd", "grizzly_bear"), "main");
+    public static final ModelLayerLocation GRIZZLY_BEAR_LAYER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath("aqupd", "grizzly_bear"), "main");
 
     @Override
     public void onInitializeClient() {
